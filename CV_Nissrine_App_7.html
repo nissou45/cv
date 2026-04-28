@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Nissrine Bussenet — Fullstack Developer</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.2/babel.min.js"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --cream:#FAF8F4;--beige:#EDE5D8;--sand:#D4C4B0;
+  --lav:#C9BBE0;--lavlight:#F0EBF8;--lavmid:#9B87C2;--lavdark:#6B5B9C;
+  --brown:#8B7355;--dark:#2C2416;--muted:#9B8B7A;--white:#fff;
+  --info:#5C8374;--infobg:#EAF3F0;
+}
+body{font-family:system-ui,-apple-system,sans-serif;background:linear-gradient(135deg,#F0EBF8 0%,#FAF8F4 50%,#EDE5D8 100%);min-height:100vh;display:flex;justify-content:center;padding:24px}
+.app{max-width:900px;width:100%;background:var(--white);border-radius:24px;overflow:hidden;box-shadow:0 24px 80px rgba(107,91,156,.15),0 8px 24px rgba(44,36,22,.08)}
+
+/* ── HERO ── */
+.hero{background:var(--white);padding:30px 40px 0;position:relative;overflow:hidden}
+.hero-top{display:flex;justify-content:space-between;align-items:flex-start;position:relative;z-index:2}
+.hero-name h1{font-size:27px;font-weight:700;color:var(--dark);letter-spacing:-.5px}
+.hero-name p{font-size:12px;color:var(--lavmid);margin-top:4px;font-weight:600;letter-spacing:.5px}
+.hero-contact{text-align:right;font-size:11px;color:var(--muted);line-height:2}
+.hero-contact a{color:var(--muted);text-decoration:none}.hero-contact a:hover{color:var(--lavdark)}
+.hero-center{display:flex;justify-content:center;margin-top:10px;position:relative;z-index:2}
+
+
+.photo-card{
+  width:190px;height:190px;border-radius:50%;overflow:hidden;
+  border:4px solid var(--lav);
+  box-shadow:
+    0 0 0 8px rgba(201,187,224,.2),
+    0 0 0 16px rgba(201,187,224,.08),
+    0 20px 50px rgba(107,91,156,.25),
+    0 8px 20px rgba(107,91,156,.15);
+  position:relative;
+  transition:.35s ease;
+}
+.photo-card:hover{transform:scale(1.04);box-shadow:0 0 0 10px rgba(201,187,224,.25),0 0 0 20px rgba(201,187,224,.1),0 28px 60px rgba(107,91,156,.3)}
+.photo-card img{width:100%;height:100%;object-fit:cover;object-position:top center;display:block}
+
+.status-badge{display:inline-flex;align-items:center;gap:6px;font-size:10px;background:var(--infobg);color:var(--info);border:1px solid rgba(92,131,116,.25);padding:4px 14px;border-radius:20px;font-weight:600;margin-top:12px}
+.pulse{width:7px;height:7px;border-radius:50%;background:var(--info);animation:p 2s infinite}
+@keyframes p{0%,100%{box-shadow:0 0 0 0 rgba(92,131,116,.4)}50%{box-shadow:0 0 0 5px rgba(92,131,116,0)}}
+.hero-bottom{display:flex;flex-direction:column;align-items:center;padding-bottom:28px;margin-top:10px}
+.bot{position:absolute;top:8px;opacity:.38;z-index:1}
+.bot.l{left:-6px}.bot.r{right:-6px;transform:scaleX(-1)}
+
+
+/* ── BAND ── */
+.band{background:linear-gradient(135deg,var(--lavlight) 0%,var(--beige) 100%);padding:26px 40px 24px;border-top:1px solid rgba(201,187,224,.3)}
+.band-grid{display:grid;grid-template-columns:1fr 1fr;gap:44px}
+.band-title{font-size:17px;font-weight:700;color:var(--dark);margin-bottom:14px}
+.profil-text{font-size:12px;color:var(--muted);line-height:1.85;font-style:italic}
+.skills-row{display:flex;gap:11px;flex-wrap:wrap}
+.skill-circle{display:flex;flex-direction:column;align-items:center;gap:5px}
+.scircle{width:50px;height:50px;border-radius:50%;background:var(--white);border:2px solid var(--lav);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:var(--lavdark);box-shadow:0 4px 12px rgba(107,91,156,.15)}
+.scircle.grow{border-color:var(--info);color:var(--info);background:var(--infobg)}
+.skill-circle span{font-size:8.5px;color:var(--muted);text-align:center;max-width:55px;line-height:1.3}
+
+/* ── TABS ── */
+.tabs{display:flex;padding:0 24px;border-bottom:1.5px solid var(--lavlight);background:var(--white);overflow-x:auto}
+.tab{padding:13px 13px;font-size:11px;font-weight:600;color:var(--muted);cursor:pointer;border-bottom:2.5px solid transparent;transition:.15s;white-space:nowrap;user-select:none}
+.tab:hover{color:var(--dark)}.tab.on{color:var(--lavdark);border-bottom-color:var(--lavmid)}
+
+/* ── PANELS ── */
+.panels{padding:28px 40px;background:var(--white)}
+.panel{animation:fi .22s ease}
+@keyframes fi{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:none}}
+.ptitle{font-size:18px;font-weight:700;color:var(--dark);margin-bottom:18px;display:flex;align-items:center;gap:14px}
+.ptitle::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,var(--lav),transparent)}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:40px}
+
+/* Timeline */
+.titem{display:flex;gap:0;margin-bottom:20px}
+.tdate-box{width:85px;flex-shrink:0;padding-top:1px}
+.tdate-pill{font-size:9px;background:var(--lavlight);color:var(--lavdark);padding:3px 9px;border-radius:20px;display:inline-block;font-weight:700;white-space:nowrap;border:1px solid var(--lav)}
+.tline-col{display:flex;flex-direction:column;align-items:center;width:24px;flex-shrink:0}
+.tdot{width:10px;height:10px;border-radius:50%;background:var(--lavmid);margin-top:3px;box-shadow:0 0 0 3px rgba(155,135,194,.2)}
+.tvline{flex:1;width:1.5px;background:var(--lavlight);margin-top:4px;min-height:20px}
+.tbody{flex:1;padding-left:10px}
+.tposte{font-size:11.5px;font-weight:700;color:var(--dark);text-transform:uppercase;letter-spacing:.4px}
+.torg{font-size:10.5px;color:var(--lavmid);margin-top:2px;font-weight:600}
+.tbull{list-style:none;margin-top:7px}
+.tbull li{font-size:11px;color:var(--muted);padding:2px 0 2px 13px;position:relative;line-height:1.6}
+.tbull li::before{content:'▸';color:var(--lavmid);position:absolute;left:0;font-size:9px;top:4px}
+
+/* Projects */
+.pgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:13px}
+.pcard{background:var(--cream);border-radius:16px;padding:17px;border:1.5px solid var(--lavlight);transition:.25s}
+.pcard:hover{border-color:var(--lav);transform:translateY(-3px);box-shadow:0 12px 30px rgba(107,91,156,.12)}
+.pcard-emoji{font-size:20px;margin-bottom:9px}
+.pcard-name{font-size:12px;font-weight:700;color:var(--dark);margin-bottom:5px;line-height:1.3}
+.pcard-desc{font-size:10.5px;color:var(--muted);line-height:1.6;margin-bottom:10px}
+.pcard-tech{display:flex;flex-wrap:wrap;gap:4px}
+.ptag{font-size:9px;padding:3px 9px;background:var(--lavlight);color:var(--lavdark);border-radius:6px;font-weight:600}
+
+/* Skills */
+.sgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+.scard{background:var(--cream);border-radius:14px;padding:14px 16px;border:1.5px solid var(--lavlight)}
+.scat{font-size:8.5px;font-weight:700;color:var(--lavdark);letter-spacing:.8px;text-transform:uppercase;margin-bottom:10px}
+.spills{display:flex;flex-wrap:wrap;gap:5px}
+.spill{font-size:10px;padding:4px 11px;background:var(--white);color:var(--dark);border-radius:7px;font-weight:500;border:1px solid var(--lav)}
+.spill.grow{background:var(--infobg);color:var(--info);border-color:rgba(92,131,116,.3);font-weight:700}
+
+/* Pills */
+.pill-row{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:22px}
+.pill{font-size:11.5px;padding:7px 18px;background:var(--lavlight);color:var(--lavdark);border-radius:20px;font-weight:600;border:1px solid var(--lav)}
+
+/* RDV */
+.rdv-wrap{background:linear-gradient(135deg,var(--lavlight),var(--beige));border-radius:18px;padding:28px;border:1.5px solid var(--lav);margin-bottom:20px}
+.rdv-title{font-size:16px;font-weight:700;color:var(--dark);margin-bottom:6px}
+.rdv-sub{font-size:12px;color:var(--muted);margin-bottom:20px;line-height:1.6}
+.rdv-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px}
+.rdv-field{display:flex;flex-direction:column;gap:5px}
+.rdv-field label{font-size:9.5px;font-weight:700;color:var(--lavdark);letter-spacing:.5px;text-transform:uppercase}
+.rdv-input{border:1.5px solid var(--lav);border-radius:10px;padding:10px 13px;font-size:12px;font-family:inherit;outline:none;background:var(--white);color:var(--dark);transition:.2s}
+.rdv-input:focus{border-color:var(--lavmid);box-shadow:0 0 0 3px rgba(155,135,194,.12)}
+.rdv-select{border:1.5px solid var(--lav);border-radius:10px;padding:10px 13px;font-size:12px;font-family:inherit;outline:none;background:var(--white);color:var(--dark);appearance:none;cursor:pointer}
+.rdv-textarea{border:1.5px solid var(--lav);border-radius:10px;padding:10px 13px;font-size:12px;font-family:inherit;outline:none;background:var(--white);color:var(--dark);resize:none;width:100%;margin-bottom:14px;min-height:80px;transition:.2s}
+.rdv-textarea:focus{border-color:var(--lavmid);box-shadow:0 0 0 3px rgba(155,135,194,.12)}
+.rdv-btn{background:var(--lavdark);color:var(--white);border:none;border-radius:12px;padding:12px 28px;font-size:12.5px;font-weight:700;cursor:pointer;transition:.2s;width:100%}
+.rdv-btn:hover{background:var(--lavmid)}.rdv-btn:disabled{opacity:.5;cursor:not-allowed}
+.rdv-success{background:var(--infobg);color:var(--info);border:1px solid rgba(92,131,116,.3);border-radius:12px;padding:14px 18px;font-size:12px;font-weight:600;text-align:center;margin-top:12px}
+
+/* Contact */
+.cgrid{display:grid;grid-template-columns:1fr 1fr;gap:11px}
+.ccard{background:var(--cream);border-radius:14px;padding:14px;display:flex;align-items:center;gap:12px;border:1.5px solid var(--lavlight)}
+.ccico{width:34px;height:34px;border-radius:10px;background:var(--lavlight);border:1px solid var(--lav);display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0}
+.cclabel{font-size:8px;color:var(--muted);margin-bottom:2px;text-transform:uppercase;letter-spacing:.5px;font-weight:700}
+.ccval{font-size:11.5px;font-weight:600;color:var(--dark);word-break:break-all}
+.ccval a{color:var(--dark);text-decoration:none}.ccval a:hover{color:var(--lavdark);text-decoration:underline}
+
+/* Chat */
+.chat-wrap{display:flex;flex-direction:column;height:430px}
+.chat-intro{background:var(--lavlight);border:1px solid rgba(201,187,224,.5);border-radius:14px;padding:13px 16px;margin-bottom:14px;font-size:12px;color:var(--muted);line-height:1.6}
+.chat-intro strong{color:var(--lavdark)}
+.suggs{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px}
+.sug{font-size:10.5px;padding:5px 13px;background:var(--cream);border:1.5px solid var(--lavlight);border-radius:20px;cursor:pointer;color:var(--muted);transition:.2s}
+.sug:hover{border-color:var(--lav);color:var(--lavdark)}
+.msgs{flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:10px;padding:4px 0;margin-bottom:14px}
+.msg{max-width:82%;padding:11px 15px;border-radius:14px;font-size:12px;line-height:1.65;animation:fi .2s ease}
+.msg.user{align-self:flex-end;background:var(--lavdark);color:#f0ebf8;border-radius:14px 14px 4px 14px}
+.msg.ai{align-self:flex-start;background:var(--cream);color:var(--dark);border:1.5px solid var(--lavlight);border-radius:14px 14px 14px 4px}
+.msg.typing{color:var(--muted);font-style:italic}
+.chat-row{display:flex;gap:8px}
+.chat-input{flex:1;border:1.5px solid var(--lav);border-radius:10px;padding:10px 14px;font-size:12px;font-family:inherit;outline:none;transition:.2s;background:var(--cream);color:var(--dark)}
+.chat-input:focus{border-color:var(--lavmid);background:var(--white)}
+.send-btn{background:var(--lavdark);color:var(--white);border:none;border-radius:10px;padding:10px 18px;cursor:pointer;font-size:14px;font-weight:700;transition:.2s}
+.send-btn:hover{background:var(--lavmid)}.send-btn:disabled{opacity:.35;cursor:not-allowed}
+</style>
+</head>
+<body><div id="root"></div>
+<script type="text/babel">
+
+const PHOTO = "data:image/jpeg;base64,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";
+
+const CV = {
+  nom:"Nissrine Bussenet",
+  role:"Développeuse Fullstack — Web & Mobile",
+  statut:"Open to work",
+  accroche:"Développeuse fullstack en reconversion professionnelle, je combine plus de 15 ans d'expérience en management et relation client avec une maîtrise des technologies front-end et back-end modernes. Passionnée par la création d'applications élégantes et performantes, je mets ma créativité, ma rigueur et mon sens du produit au service de projets web ambitieux.",
+  contact:[
+    {ico:"☎",label:"Téléphone",val:"0656 75 07 71",href:"tel:0656750771"},
+    {ico:"@",label:"Email",val:"niss91@icloud.com",href:"mailto:niss91@icloud.com"},
+    {ico:"⌂",label:"Lieu",val:"Mazères-Lezons (64)"},
+    {ico:"in",label:"LinkedIn",val:"nissrine-bussenet",href:"https://linkedin.com/in/nissrine-bussenet-5a2260386"},
+    {ico:"⌥",label:"GitHub",val:"github.com/nissou45",href:"https://github.com/nissou45"},
+  ],
+  langues:["Français","Espagnol","Arabe","Anglais technique"],
+  topSkills:[
+    {abbr:"Re",label:"React"},{abbr:"TS",label:"TypeScript"},{abbr:"Ng",label:"Angular"},
+    {abbr:"RN",label:"React Native"},{abbr:"NJ",label:"Next.js"},{abbr:"No",label:"Node.js"},
+    {abbr:"AI",label:"IA 🌱",grow:true},
+  ],
+  projets:[
+    {emoji:"☁️",nom:"La tête dans les nuages — API",desc:"API REST complète avec endpoints et gestion des données",tech:["TypeScript","Node.js","Express"]},
+    {emoji:"🌐",nom:"La tête dans les nuages — Web",desc:"Interface web élégante connectée à l'API",tech:["TypeScript","React"]},
+    {emoji:"✍️",nom:"La tête dans les nuages — Blog",desc:"Blog intégré avec gestion de contenu",tech:["TypeScript","React"]},
+    {emoji:"📸",nom:"Snapnest",desc:"Application de partage et gestion de photos",tech:["Angular","TypeScript"]},
+    {emoji:"🧘",nom:"App Zenbulle",desc:"Application mobile de bien-être et méditation",tech:["React Native","JS"]},
+    {emoji:"✅",nom:"TotoApp",desc:"Application de gestion de tâches personnelles",tech:["React","Tailwind"]},
+  ],
+  experiences:[
+    {
+      poste:"Développeuse Web — Stage",
+      org:"Aneo & Access IQ",lieu:"Paris",date:"2024",
+      bullets:[
+        "Gestion de tickets techniques via GitHub et Notion",
+        "Participation aux réunions d'équipe et cérémonies Agile",
+        "Suivi d'un projet en cours, compréhension du cycle produit",
+        "Développement de composants front-end React & TypeScript",
+        "Intégration de maquettes Figma en responsive design",
+        "Collaboration étroite avec les équipes dev et product",
+      ]
+    },
+    {
+      poste:"Responsable de Salon & Coiffeuse",
+      org:"Salon de coiffure",lieu:"Pau",date:"2009 – 2024",
+      bullets:[
+        "Management d'équipe : recrutement, planning, formation",
+        "Gestion de la relation client et fidélisation",
+        "Suivi administratif et gestion des stocks",
+        "Développement du chiffre d'affaires",
+      ]
+    },
+  ],
+  formations:[
+    {
+      poste:"Formation Développeuse Web & Site Web",
+      org:"AFEC",lieu:"Pau",date:"2023 – 2024",
+      bullets:["HTML, CSS, JavaScript — fondamentaux","Projets pratiques & stage en entreprise"]
+    },
+    {
+      poste:"Montée en compétences — Self-learning",
+      org:"OpenClassroom & projets perso",lieu:"En ligne",date:"2023 – présent",
+      bullets:["TypeScript, React, React Native, Angular, Next.js, Node.js","Docker, MongoDB, Express, REST API","Projets : La tête dans les nuages, Snapnest, Zenbulle, TotoApp","Exploration IA & prompt engineering"]
+    },
+  ],
+  skillsGroups:[
+    {cat:"Front-End",items:[{l:"HTML5"},{l:"CSS3"},{l:"SCSS"},{l:"Tailwind CSS"}]},
+    {cat:"Langages",items:[{l:"JavaScript"},{l:"TypeScript"}]},
+    {cat:"Frameworks Front",items:[{l:"React"},{l:"React Native"},{l:"Angular"},{l:"Next.js"}]},
+    {cat:"Back-End",items:[{l:"Node.js"},{l:"Express"},{l:"REST API"},{l:"MongoDB"}]},
+    {cat:"DevOps & Outils",items:[{l:"Docker"},{l:"Git / GitHub"},{l:"Figma"},{l:"Notion"},{l:"Agile"}]},
+    {cat:"En progression 🌱",items:[{l:"IA & Prompt Engineering",g:true},{l:"PostgreSQL",g:true}]},
+  ],
+};
+
+const SYSTEM_PROMPT = `Tu es l'assistante IA de Nissrine Bussenet, développeuse fullstack junior en reconversion professionnelle à Mazères-Lezons (64).
+
+COMPÉTENCES FRONT : HTML5, CSS3, SCSS, JavaScript, TypeScript, React, React Native, Angular, Next.js, Tailwind CSS.
+COMPÉTENCES BACK : Node.js, Express, REST API, MongoDB, Docker.
+OUTILS : Git/GitHub, Figma, Notion, Agile.
+EN PROGRESSION : IA & Prompt Engineering, PostgreSQL.
+
+PROJETS :
+- La tête dans les nuages API (TypeScript/Node.js/Express)
+- La tête dans les nuages Web (TypeScript/React)
+- La tête dans les nuages Blog (TypeScript/React)
+- Snapnest (Angular/TypeScript - partage photos)
+- App Zenbulle (React Native - bien-être)
+- TotoApp (React/Tailwind - gestion tâches)
+
+STAGE 2024 : Aneo & Access IQ Paris — tickets GitHub/Notion, réunions Agile, suivi projet, composants React/TypeScript, intégration Figma.
+EXPÉRIENCE : 15 ans coiffure dont 10+ ans responsable de salon.
+FORMATION : AFEC Pau (HTML/CSS/JS + stage) + OpenClassroom + auto-formation.
+LANGUES : Français, Espagnol, Arabe, Anglais technique.
+CONTACT : niss91@icloud.com | github.com/nissou45.
+
+Réponds en français, concis (3-4 phrases max), chaleureux et professionnel. Valorise son profil fullstack et sa reconversion inspirante.`;
+
+const SUGGESTIONS = [
+  "Quels sont tes projets perso ?","Tu fais du back-end aussi ?","Parle-moi de ta reconversion","Quels sont tes outils DevOps ?",
+];
+
+function RdvPanel() {
+  const [form,setForm] = React.useState({nom:'',email:'',motif:'Recrutement CDI',date:'',msg:''});
+  const [sent,setSent] = React.useState(false);
+  const [loading,setLoading] = React.useState(false);
+  const set = k => e => setForm(f=>({...f,[k]:e.target.value}));
+  const submit = async() => {
+    if(!form.nom||!form.email) return;
+    setLoading(true);
+    await new Promise(r=>setTimeout(r,1000));
+    setSent(true);
+    setLoading(false);
+  };
+  return(
+    <div>
+      <div className="rdv-wrap">
+        <div className="rdv-title">📅 Prendre rendez-vous</div>
+        <div className="rdv-sub">Vous souhaitez discuter d'une opportunité ou d'un projet ? Envoyez-moi une demande et je vous répondrai sous 24h !</div>
+        {!sent ? (
+          <>
+            <div className="rdv-grid">
+              <div className="rdv-field"><label>Votre nom</label><input className="rdv-input" placeholder="Jean Dupont" value={form.nom} onChange={set('nom')}/></div>
+              <div className="rdv-field"><label>Votre email</label><input className="rdv-input" type="email" placeholder="jean@example.com" value={form.email} onChange={set('email')}/></div>
+              <div className="rdv-field"><label>Motif</label>
+                <select className="rdv-select" value={form.motif} onChange={set('motif')}>
+                  <option>Recrutement CDI</option><option>Recrutement CDD</option>
+                  <option>Mission Freelance</option><option>Collaboration projet</option><option>Autre</option>
+                </select>
+              </div>
+              <div className="rdv-field"><label>Date souhaitée</label><input className="rdv-input" type="date" value={form.date} onChange={set('date')}/></div>
+            </div>
+            <textarea className="rdv-textarea" placeholder="Décrivez votre projet ou opportunité…" value={form.msg} onChange={set('msg')}/>
+            <button className="rdv-btn" onClick={submit} disabled={loading||!form.nom||!form.email}>{loading?"Envoi en cours…":"Envoyer ma demande ✨"}</button>
+          </>
+        ):(
+          <div className="rdv-success">🎉 Demande envoyée ! Nissrine vous contactera sous 24h.</div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+function ChatPanel() {
+  const [msgs,setMsgs] = React.useState([{role:'ai',text:"Bonjour ! Je suis l'assistante IA de Nissrine. Posez-moi n'importe quelle question sur son profil, ses projets ou ses compétences fullstack 😊"}]);
+  const [input,setInput] = React.useState('');
+  const [loading,setLoading] = React.useState(false);
+  const ref = React.useRef();
+  React.useEffect(()=>{ref.current?.scrollIntoView({behavior:'smooth'})},[msgs]);
+  const send = async(text)=>{
+    const q=(text||input).trim();
+    if(!q||loading) return;
+    setInput('');
+    const next=[...msgs,{role:'user',text:q}];
+    setMsgs(next);
+    setLoading(true);
+    try{
+      const history=next.map(m=>({role:m.role==='ai'?'assistant':'user',content:m.text}));
+      const res=await fetch('https://api.anthropic.com/v1/messages',{
+        method:'POST',headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:400,system:SYSTEM_PROMPT,messages:history})
+      });
+      const data=await res.json();
+      setMsgs(m=>[...m,{role:'ai',text:data?.content?.[0]?.text||"Je n'ai pas pu répondre, réessayez !"}]);
+    }catch{
+      setMsgs(m=>[...m,{role:'ai',text:"Erreur de connexion, réessayez dans un moment !"}]);
+    }
+    setLoading(false);
+  };
+  return(
+    <div className="chat-wrap">
+      <div className="chat-intro"><strong>🤖 Assistante IA de Nissrine</strong><br/>Posez-moi une question sur son parcours fullstack, ses projets, ses compétences…</div>
+      <div className="suggs">{SUGGESTIONS.map((s,i)=><div key={i} className="sug" onClick={()=>send(s)}>{s}</div>)}</div>
+      <div className="msgs">
+        {msgs.map((m,i)=><div key={i} className={`msg ${m.role}`}>{m.text}</div>)}
+        {loading&&<div className="msg ai typing">En train de répondre…</div>}
+        <div ref={ref}/>
+      </div>
+      <div className="chat-row">
+        <input className="chat-input" value={input} onChange={e=>setInput(e.target.value)} onKeyDown={e=>e.key==='Enter'&&send()} placeholder="Votre question…" disabled={loading}/>
+        <button className="send-btn" onClick={()=>send()} disabled={loading||!input.trim()}>↗</button>
+      </div>
+    </div>
+  );
+}
+
+const Botanical=()=>(
+  <svg width="120" height="200" viewBox="0 0 120 200" fill="none">
+    <path d="M60 185 Q55 148 38 118 Q20 90 28 62 Q38 35 60 25" stroke="#9B87C2" strokeWidth="1.5" fill="none"/>
+    <path d="M60 148 Q42 133 32 113 Q22 95 36 80" stroke="#9B87C2" strokeWidth="1" fill="none"/>
+    <path d="M60 130 Q74 110 70 86 Q64 64 50 53" stroke="#9B87C2" strokeWidth="1" fill="none"/>
+    <ellipse cx="30" cy="78" rx="13" ry="20" transform="rotate(-30 30 78)" stroke="#C9BBE0" strokeWidth="1" fill="rgba(201,187,224,0.15)"/>
+    <ellipse cx="72" cy="84" rx="11" ry="18" transform="rotate(20 72 84)" stroke="#C9BBE0" strokeWidth="1" fill="rgba(201,187,224,0.15)"/>
+    <ellipse cx="34" cy="112" rx="9" ry="15" transform="rotate(-15 34 112)" stroke="#C9BBE0" strokeWidth="1" fill="rgba(201,187,224,0.15)"/>
+    <circle cx="60" cy="23" r="6" stroke="#9B87C2" strokeWidth="1" fill="rgba(201,187,224,0.2)"/>
+    <circle cx="58" cy="12" r="4" stroke="#9B87C2" strokeWidth="1" fill="rgba(201,187,224,0.15)"/>
+    <circle cx="68" cy="16" r="3" stroke="#9B87C2" strokeWidth="1" fill="rgba(201,187,224,0.15)"/>
+    <line x1="60" y1="23" x2="58" y2="12" stroke="#9B87C2" strokeWidth=".8"/>
+    <line x1="60" y1="23" x2="68" y2="16" stroke="#9B87C2" strokeWidth=".8"/>
+  </svg>
+);
+
+const TABS=[
+  {id:'profil',label:'Profil'},{id:'xp',label:'Expériences'},{id:'formation',label:'Formation'},
+  {id:'projets',label:'Projets'},{id:'skills',label:'Compétences'},{id:'rdv',label:'RDV'},
+  {id:'contact',label:'Contact'},{id:'chat',label:'🤖 Chat IA'},
+];
+
+function Timeline({items}){
+  return items.map((item,i)=>(
+    <div key={i} className="titem">
+      <div className="tdate-box"><div className="tdate-pill">{item.date}</div></div>
+      <div className="tline-col"><div className="tdot"/><div className="tvline"/></div>
+      <div className="tbody">
+        <div className="tposte">{item.poste}</div>
+        <div className="torg">{item.org} · {item.lieu}</div>
+        <ul className="tbull">{item.bullets.map((b,j)=><li key={j}>{b}</li>)}</ul>
+      </div>
+    </div>
+  ));
+}
+
+function App(){
+  const [tab,setTab]=React.useState('profil');
+  const panels={
+    profil:(
+      <>
+        <div className="ptitle">Profil</div>
+        <div style={{fontSize:13,color:'var(--muted)',lineHeight:1.9,fontStyle:'italic',borderLeft:'3px solid var(--lav)',paddingLeft:18,marginBottom:22}}>{CV.accroche}</div>
+        <div className="ptitle">Langues</div>
+        <div className="pill-row">{CV.langues.map((l,i)=><div key={i} className="pill">{l}</div>)}</div>
+        <div className="ptitle">Qualités</div>
+        <div className="pill-row">
+          {["Créative & sens du détail","Rigoureuse & organisée","Leadership naturel","Orientée satisfaction client"].map((q,i)=>(
+            <div key={i} className="pill">{q}</div>
+          ))}
+        </div>
+      </>
+    ),
+    xp:(<><div className="ptitle">Expériences professionnelles</div><Timeline items={CV.experiences}/></>),
+    formation:(<><div className="ptitle">Formation & montée en compétences</div><Timeline items={CV.formations}/></>),
+    projets:(
+      <>
+        <div className="ptitle">Projets personnels</div>
+        <div className="pgrid">
+          {CV.projets.map((p,i)=>(
+            <div key={i} className="pcard">
+              <div className="pcard-emoji">{p.emoji}</div>
+              <div className="pcard-name">{p.nom}</div>
+              <div className="pcard-desc">{p.desc}</div>
+              <div className="pcard-tech">{p.tech.map((t,j)=><span key={j} className="ptag">{t}</span>)}</div>
+            </div>
+          ))}
+        </div>
+      </>
+    ),
+    skills:(
+      <>
+        <div className="ptitle">Stack technique</div>
+        <div className="sgrid">
+          {CV.skillsGroups.map((g,i)=>(
+            <div key={i} className="scard">
+              <div className="scat">{g.cat}</div>
+              <div className="spills">{g.items.map((s,j)=><span key={j} className={`spill${s.g?' grow':''}`}>{s.l}</span>)}</div>
+            </div>
+          ))}
+        </div>
+      </>
+    ),
+    rdv:<RdvPanel/>,
+    contact:(
+      <>
+        <div className="ptitle">Me contacter</div>
+        <div className="cgrid">
+          {CV.contact.map((c,i)=>(
+            <div key={i} className="ccard">
+              <div className="ccico">{c.ico}</div>
+              <div><div className="cclabel">{c.label}</div>
+              <div className="ccval">{c.href?<a href={c.href} target="_blank" rel="noopener noreferrer">{c.val}</a>:c.val}</div></div>
+            </div>
+          ))}
+        </div>
+      </>
+    ),
+    chat:<ChatPanel/>,
+  };
+  return(
+    <div className="app">
+      <div className="hero">
+        <div className="bot l"><Botanical/></div>
+        <div className="bot r"><Botanical/></div>
+        <div className="hero-top">
+          <div className="hero-name">
+            <h1>{CV.nom}</h1>
+            <p>{CV.role}</p>
+          </div>
+          <div className="hero-contact">
+            <div><a href="mailto:niss91@icloud.com">niss91@icloud.com</a></div>
+            <div>0656 75 07 71</div>
+            <div><a href="https://github.com/nissou45" target="_blank" rel="noopener noreferrer">github.com/nissou45</a></div>
+          </div>
+        </div>
+        <div className="hero-bottom">
+          <div className="hero-center"><div className="photo-card"><img src={PHOTO} alt="Nissrine Bussenet"/></div></div>
+          <div className="status-badge"><div className="pulse"/>{CV.statut}</div>
+        </div>
+      </div>
+      <div className="band">
+        <div className="band-grid">
+          <div><div className="band-title">Profil</div><div className="profil-text">{CV.accroche.slice(0,190)}…</div></div>
+          <div><div className="band-title">Stack clé</div>
+            <div className="skills-row">
+              {CV.topSkills.map((s,i)=>(
+                <div key={i} className="skill-circle">
+                  <div className={`scircle${s.grow?' grow':''}`}>{s.abbr}</div>
+                  <span>{s.label}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+      <div className="tabs">{TABS.map(t=><div key={t.id} className={`tab${tab===t.id?' on':''}`} onClick={()=>setTab(t.id)}>{t.label}</div>)}</div>
+      <div className="panels"><div key={tab} className="panel">{panels[tab]}</div></div>
+    </div>
+  );
+}
+ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
+</script></body></html>
